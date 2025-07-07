@@ -36,10 +36,14 @@ function VerificationComponent() {
 
         setStatus('success');
         setMessage('Your account has been successfully verified!');
-      } catch (err: any) {
-        setStatus('error');
-        setMessage(err.message || 'An error occurred during verification.');
-      }
+      } catch (err: unknown) { // FIXED
+  setStatus('error');
+  if (err instanceof Error) {
+    setMessage(err.message || 'An error occurred during verification.');
+  } else {
+    setMessage('An unknown verification error occurred.');
+  }
+}
     };
 
     verifyToken();

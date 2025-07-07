@@ -57,12 +57,12 @@ export default function LoginPage() {
       router.push('/jobs');
       // ------------------------------------
 
-    } catch (err: unknown) { // FIXED: Changed 'any' to 'unknown'
-        if (err instanceof Error) {
-            setError(err.message);
-        } else {
-            setError('An unexpected error occurred.');
-        }
+    } catch (err: unknown) { // FIXED
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected login error occurred.');
+      }
     }
   };
 
@@ -89,12 +89,12 @@ export default function LoginPage() {
       
       setMessage(data.message);
     } 
-    catch (err: unknown) { // FIXED: Changed 'any' to 'unknown'
-        if (err instanceof Error) {
-            setError(err.message);
-        } else {
-            setError('An unexpected error occurred.');
-        }
+    catch (err: unknown) { // FIXED
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unexpected error occurred when resending OTP.');
+      }
     }
   };
 

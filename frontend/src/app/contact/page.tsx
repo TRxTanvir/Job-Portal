@@ -40,17 +40,18 @@ export default function ContactPage() {
       // Clear the form on success
       setFormData({ name: '', email: '', subject: '', message: '' });
 
-    } catch (error: any) {
-      setStatus({ isSubmitting: false, message: error.message || 'An error occurred.', isError: true });
+    } catch (error: unknown) { // FIXED: Use 'unknown' instead of 'any'
+      const message = error instanceof Error ? error.message : 'An unknown error occurred.';
+      setStatus({ isSubmitting: false, message, isError: true });
     }
   };
 
   return (
-    <div className="bg-white text-black py-20 px-4">
+   <div className="bg-white text-black py-20 px-4">
       <div className="container mx-auto max-w-2xl">
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-extrabold text-black">Contact Us</h1>
-          <p className="mt-4 text-lg text-gray-600">Have a question or feedback? We'd love to hear from you.</p>
+           <p className="mt-4 text-lg text-gray-600">Have a question or feedback? We&apos;d love to hear from you.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-gray-50 p-8 rounded-xl shadow-md border border-gray-200 space-y-6">
