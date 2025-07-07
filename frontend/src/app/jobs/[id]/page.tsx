@@ -6,8 +6,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { useParams, useRouter } from 'next/navigation';
 
 // Icons for the UI
-import { FaBookmark } from 'react-icons/fa';
-import { BsCurrencyDollar, BsCalendarCheck, BsCalendarX, BsBarChart, BsBriefcase } from 'react-icons/bs';
+ import { BsCurrencyDollar, BsCalendarCheck, BsCalendarX, BsBarChart, BsBriefcase } from 'react-icons/bs';
 
 type Job = {
   id: number;
@@ -16,7 +15,7 @@ type Job = {
   company: string;
 };
 
-export default function JobDetailPage({ params }: { params: { id: string } }) {
+export default function JobDetailPage({ params }: { params: { id: string } }) { 
   const [job, setJob] = useState<Job | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,7 +23,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
   const { user, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
 
-  const { id } = useParams()
+  const { id } = params;
 
 
  
@@ -34,7 +33,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
         router.push('/login');
       }
     }
-  }, [user, isAuthLoading, router]); // It runs when auth state changes
+  }, [id,user, isAuthLoading, router]); // It runs when auth state changes
 
   useEffect(() => {
     if (user) {
@@ -102,7 +101,8 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
                 </div>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4">
+              {/* REMOVED: The unused bookmark button that was here */}
               <button
                 onClick={handleApplyClick}
                 className="px-6 py-3 font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg"
