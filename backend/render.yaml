@@ -1,10 +1,10 @@
 services:
   # 1. The PostgreSQL Database
-  - type: pserv
-    name: jobportal-db
-    region: singapore # A free-tier region
-    plan: free
-    postgres:  
+  - type:  pserv
+    name:  jobportal-db
+    region:  singapore # A free-tier region
+    plan:  free
+    postgres:   
       version: "14"
 
 
