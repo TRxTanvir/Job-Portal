@@ -19,6 +19,7 @@ export default function ProfilePage() {
   const { user, token, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
   
+  // A single, complete state object for all form data
   const [formData, setFormData] = useState<ProfileFormData>({
     name: '',
     education: '',
@@ -27,18 +28,19 @@ export default function ProfilePage() {
     extraCareer: '',
     resumeUrl: '',
   });
+
   const [profilePicFile, setProfilePicFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState('');
 
-  // Effect to protect the route if the user is not authenticated
+  // Effect to protect the route
   useEffect(() => {
     if (!isAuthLoading && !user) {
       router.push('/login');
     }
   }, [user, isAuthLoading, router]);
 
-  // Effect to fetch the user's current profile data when the page loads
+  // Effect to fetch the profile data when the page loads
   useEffect(() => {
     if (user && token) {
       const fetchProfile = async () => {
@@ -50,6 +52,7 @@ export default function ProfilePage() {
           });
           if (!res.ok) throw new Error('Failed to fetch profile data.');
           const profileData = await res.json();
+          // Populate the form state with all fields, including resumeUrl
           setFormData({
             name: profileData.name || '',
             education: profileData.education || '',
@@ -83,7 +86,8 @@ export default function ProfilePage() {
     e.preventDefault();
     setMessage('Updating...');
     const submissionData = new FormData();
-    // Only append fields that are part of the DTO for this form
+    
+    // We only need to send the fields that can be edited in this form
     submissionData.append('name', formData.name);
     submissionData.append('education', formData.education);
     submissionData.append('job', formData.job);
@@ -93,6 +97,7 @@ export default function ProfilePage() {
     if (profilePicFile) {
       submissionData.append('profilePic', profilePicFile);
     }
+
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL;
       const res = await fetch(`${apiUrl}/user/profile`, {
@@ -112,14 +117,14 @@ export default function ProfilePage() {
         job: data.user.job || '',
         experience: data.user.experience || '',
         extraCareer: data.user.extraCareer || '',
-        resumeUrl: data.user.resumeUrl || '',
+        resumeUrl: data.user.resumeUrl || '', // Make sure to update resumeUrl as well
       });
       setProfilePicFile(null);
       const fileInput = document.getElementById('profilePic') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
-    } catch (error: unknown) {
-        const message = error instanceof Error ? error.message : 'An unknown error occurred.';
-        setMessage(message);
+    } catch (error: any) {
+      console.error(error);
+      setMessage(error.message || 'An error occurred while updating.');
     }
   };
 
@@ -172,9 +177,9 @@ export default function ProfilePage() {
 
       {/* SECTION 2: PRINTABLE PROFILE DISPLAY */}
       <div className="mt-16 printable-area">
-        <div className="flex justify-between items-center mb-6 border-b border-gray-300 pb-3 no-print">
+        <div className="flex justify-between items-center mb-6 border-b border-gray-300 pb-3">
           <h2 className="text-3xl font-bold text-black">Current Profile Details</h2>
-          <button onClick={handlePrint} className="px-5 py-2 bg-gray-700 text-white font-semibold rounded-md hover:bg-black transition-colors">
+          <button onClick={handlePrint} className="px-5 py-2 bg-gray-700 text-white font-semibold rounded-md hover:bg-black transition-colors no-print">
             Print Profile
           </button>
         </div>
@@ -199,6 +204,7 @@ export default function ProfilePage() {
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Extra Curricular Activities</h3>
             <p className="text-lg text-black">{formData.extraCareer || 'Not provided'}</p>
           </div>
+          {/* --- This is the conditional CV link --- */}
           <div className="col-span-1 md:col-span-2">
             <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">CV / Resume</h3>
             {formData.resumeUrl ? (
@@ -209,7 +215,19 @@ export default function ProfilePage() {
               <Link href="/profile/upload-cv" className="text-lg text-blue-600 hover:underline font-medium">
                 Upload CV Now
               </Link>
+              
             )}
+              <div className="col-span-1 md:col-span-2">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Update/Edit</h3>
+            {formData.resumeUrl ? (
+              <a href={`http://localhost:3000/profile/upload-cv`} target="_blank" rel="noreferrer" className="text-lg text-blue-600 hover:underline font-medium" >
+                Edit/Update My CV
+              </a>
+            ) : (
+              <Link href="/profile/upload-cv" className="text-lg text-red-600 hover:underline font-medium">
+                Update/Edit CV Now
+              </Link>)}:
+               </div>
           </div>
         </div>
       </div>
