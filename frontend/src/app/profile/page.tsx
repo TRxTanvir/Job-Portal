@@ -61,14 +61,13 @@ export default function ProfilePage() {
             extraCareer: profileData.extraCareer || '',
             resumeUrl: profileData.resumeUrl || '',
           });
-        } catch (error: unknown) { // FIXED: Changed 'any' to 'unknown'
-        if (error instanceof Error) {
-            setMessage(error.message || 'An error occurred while updating.');
-        } else {
-            setMessage('An unexpected error occurred.');
+        } catch (error) {
+          console.error(error);
+          setMessage('Could not load profile data.');
+        } finally {
+          setIsLoading(false);
         }
-    }
-  };
+      };
       fetchProfile();
     }
   }, [user, token]);

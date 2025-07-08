@@ -63,14 +63,11 @@ export default function UploadCvPage() {
         router.push('/profile');
       }, 2000);
 
-    } catch (error: unknown) { // FIXED: Changed 'any' to 'unknown'
-        if (error instanceof Error) {
-            setMessage(error.message);
-        } else {
-            setMessage('An unexpected error occurred.');
-        }
+    } catch (error: any) {
+      setIsError(true);
+      setMessage(error.message || 'An error occurred. Please try again.');
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
   };
 
