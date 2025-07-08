@@ -54,13 +54,13 @@ export default function LoginPage() {
       login(userForContext, data.accessToken);
       router.push('/jobs');
 
-    } catch (err: unknown) { // FIXED: Use 'unknown' for type safety
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unexpected login error occurred.');
-      }
-    }
+    } catch (err: unknown) {
+  if (err instanceof Error) {
+    setError(err.message);
+  } else {
+    setError('An unexpected error occurred.');
+  }
+}
   };
 
   const handleResendOtp = async () => {
@@ -83,13 +83,13 @@ export default function LoginPage() {
         throw new Error(data.message || 'Failed to resend OTP');
       }
       setMessage(data.message);
-    } catch (err: unknown) { // FIXED: Use 'unknown' for type safety
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unexpected error occurred when resending OTP.');
-      }
-    }
+    } catch (err: unknown) {
+  if (err instanceof Error) {
+    setError(err.message);
+  } else {
+    setError('An unexpected error occurred.');
+  }
+}
   };
 
   return (

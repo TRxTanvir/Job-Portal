@@ -4,8 +4,6 @@ import { useState, useEffect } from 'react';
 import ApplyModal from '../../../components/ApplyModal';
 import { useAuth } from '../../../context/AuthContext';
 import { useRouter } from 'next/navigation';
-
-// Icons for the UI - 'FaBookmark' has been removed as it was not used.
 import { BsCurrencyDollar, BsCalendarCheck, BsCalendarX, BsBarChart, BsBriefcase } from 'react-icons/bs';
 
 // Define the shape of the Job object
@@ -17,33 +15,36 @@ type Job = {
   location?: string;
 };
 
-// The component receives 'params' which contains the 'id' from the URL
-export default function JobDetailPage({ params }: { params: { id: string } }) {
+// Define the type for the page's props, fixing the 'implicit any' error
+interface JobDetailPageProps {
+  params: {
+    id: string;
+  };
+}
+
+export default function JobDetailPage({ params }: JobDetailPageProps) {
+  // All state and hooks must be at the top level of the component
   const [job, setJob] = useState<Job | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const { user, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
-  
-  // We get the 'id' from the params object here
   const { id } = params;
 
-  // This useEffect protects the route
+  // Effect to protect the route
   useEffect(() => {
     if (!isAuthLoading && !user) {
       router.push('/login');
     }
   }, [user, isAuthLoading, router]);
 
-  // This useEffect fetches the data for the specific job
+  // Effect to fetch the job details
   useEffect(() => {
     if (user) {
       const getJobDetails = async () => {
         setIsLoading(true);
         try {
           const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-          // We use the 'id' from params to build the fetch URL
           const res = await fetch(`${apiUrl}/jobs/${id}`, { cache: 'no-store' });
           if (!res.ok) throw new Error('Job not found');
           const data = await res.json();
@@ -57,7 +58,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
       };
       getJobDetails();
     }
-  }, [id, user]); // Dependency array is correct
+  }, [id, user]);
 
   const handleApplyClick = () => {
     if (user) {
@@ -74,13 +75,12 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
   if (!job) {
     return <div className="text-center p-10 font-bold text-lg text-black">Job Not Found.</div>;
   }
-
-  // Dummy data until it's added to your backend Job entity
+  
   const jobOverview = {
-    posted: '14 Jun, 2025',
-    expires: '14 Aug, 2025',
-    level: 'Entry Level',
-    experience: '1-2 Years',
+      posted: '14 Jun, 2025',
+      expires: '14 Aug, 2025',
+      level: 'Entry Level',
+      experience: '1-2 Years'
   };
 
   return (
@@ -101,10 +101,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
               </div>
             </div>
             <div className="flex items-center gap-4">
-              <button
-                onClick={handleApplyClick}
-                className="px-6 py-3 font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg"
-              >
+              <button onClick={handleApplyClick} className="px-6 py-3 font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-lg">
                 Apply Now &rarr;
               </button>
             </div>
@@ -113,12 +110,7 @@ export default function JobDetailPage({ params }: { params: { id: string } }) {
             <div className="lg:col-span-2 bg-white p-8 rounded-xl shadow-sm border border-gray-200">
               <h2 className="text-2xl font-bold text-black">Job Description</h2>
               <div className="mt-4 prose prose-lg max-w-none text-black">
-                <p>{job.description}</p>
-                <h3 className="font-bold text-black">Requirements</h3>
-                <ul>
-                  <li>Great troubleshooting and analytical skills.</li>
-                  <li>Experience with HTML, CSS, JavaScript.</li>
-                </ul>
+                  <p>{job.description}</p>
               </div>
             </div>
             <div className="lg:col-span-1 space-y-8">
