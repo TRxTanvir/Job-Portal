@@ -4,8 +4,10 @@ services:
     name: jobportal-db
     region: singapore # A free-tier region
     plan: free
-    postgres:  # <-- Correctly indented
+    postgres:
       version: "14"
+
+
 
   # 2. The NestJS Backend Service
   - type: web
