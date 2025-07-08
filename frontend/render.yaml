@@ -1,0 +1,16 @@
+# Exported from Render on 2025-07-08T14:15:30Z
+services:
+- type: web
+  name: jobportal-frontend
+  runtime: node
+  repo: https://github.com/TRxTanvir/job-portal
+  plan: free
+  envVars:
+  - key: NEXT_PUBLIC_API_URL
+    sync: false
+  region: singapore
+  buildCommand: npm install && npm run build
+  startCommand: npm run start
+  autoDeployTrigger: commit
+  rootDir: ./frontend
+version: "1"
