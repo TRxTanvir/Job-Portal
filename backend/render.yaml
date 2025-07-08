@@ -1,0 +1,71 @@
+services:
+  # 1. The PostgreSQL Database
+  - type: pserv
+    name: jobportal-db
+    region: singapore # A free-tier region
+    plan: free
+    postgres:
+      version: "14"
+
+  # 2. The NestJS Backend Service
+  - type: web
+    name: jobportal-backend
+    region: singapore
+    plan: free
+    env: node
+    rootDir: ./backend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: jobportal-db
+          property: connectionString
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: jobportal-db
+          property: host
+      - key: DB_PORT
+        fromService:
+          type: pserv
+          name: jobportal-db
+          property: port
+      - key: DB_USERNAME
+        fromService:
+          type: pserv
+          name: jobportal-db
+          property: user
+      - key: DB_PASSWORD
+        fromService:
+          type: pserv
+          name: jobportal-db
+          property: password
+      - key: DB_DATABASE
+        fromService:
+          type: pserv
+          name: jobportal-db
+          property: database
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_RESET_SECRET
+        generateValue: true
+      - key: WEBSITE_OWNER_EMAIL
+        value: trxtech746@gmail.com
+
+  # 3. The Next.js Frontend Service
+  - type: web
+    name: jobportal-frontend
+    region: singapore
+    plan: free
+    env: node
+    rootDir: ./frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: jobportal-backend
+          property: url
