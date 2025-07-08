@@ -30,9 +30,13 @@ export default function RegisterPage() {
       // On success, instead of redirecting, we set isSubmitted to true
       setIsSubmitted(true);
 
-    } catch (err: any) {
-      setError(err.message);
-    }
+   } catch (err: unknown) {
+  if (err instanceof Error) {
+    setError(err.message);
+  } else {
+    setError('An unexpected error occurred.');
+  }
+}
   };
 
   // If the form has been submitted successfully, show a message
