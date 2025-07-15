@@ -57,10 +57,9 @@ if (user.accountStatus === 'unverified') {
       //check for account status
       if (user.accountStatus === 'unverified') {
         if (!otp) {
-          return {
-            message:
-              'Your account is not verified.Please provide your otp to verify.',
-          };
+          throw new UnauthorizedException(
+            'Your account is not verified.Please provide your otp to verify.',
+          );
         } else {
           await this.verifyToken(user.id, otp);
         }

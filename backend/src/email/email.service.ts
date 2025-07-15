@@ -10,15 +10,14 @@ import { sendEmailDto } from 'src/email/dto/email.dto';
 export class EmailService {
   private transporter;
 
-  constructor() {
-    // This is where Nodemailer connects to Gmail
+  constructor(private readonly configService: ConfigService) {
     this.transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST, // Should be smtp.gmail.com
-      port: parseInt(process.env.EMAIL_PORT, 10), // Should be 587
-      secure: process.env.EMAIL_SECURE === 'true', // false for port 587
+      host: this.configService.get<string>('EMAIL_HOST'),
+      port: this.configService.get<number>('EMAIL_PORT'),
+      secure: this.configService.get<boolean>('EMAIL_SECURE'),
       auth: {
-        user: process.env.EMAIL_USER, // your trxtech746@gmail.com
-        pass: process.env.EMAIL_PASSWORD, // <-- This MUST be EMAIL_PASSWORD
+        user: this.configService.get<string>('EMAIL_USER'),
+        pass: this.configService.get<string>('EMAIL_PASSWORD'),
       },
     });
   }
@@ -44,36 +43,21 @@ export class EmailService {
   // ... any other email functions
 
  
-emailTransport() {
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // true for port 465, false for 587
-    auth: {
-      user: 'trxtech746@gmail.com',
-      pass: 'bnmk ytdt uqth ppzq', // Gmail App Password
-    },
-  });
-
-  return transporter;
-}
-
   async sendEmail(dto: sendEmailDto) {
     const { recipients, subject, html } = dto;
 
-    const transport = this.emailTransport();
-
     const options: nodemailer.SendMailOptions = {
-      from: 'trxtech746@gmail.com',
+      from: '"Job Portal" <${process.env.EMAIL_USER}>',
       to: recipients,
-      subject:" Otp For Registation",
+      subject: subject,
       html: html,
     };
     try {
-      await transport.sendMail(options);
+      await this.transporter.sendMail(options);
       console.log('Email sent successfully');
     } catch (error) {
       console.log('Error sending mail: ', error);
+      throw new Error('Failed to send email');
     }
   }
 }

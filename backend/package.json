@@ -6,8 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "kill-port": "for /f \"tokens=5\" %a in ('netstat -aon ^| find \":3000\"') do taskkill /PID %a /F",
-    "start:dev": "npm run kill-port && nest start --watch",
+    "start:dev": "nest start --watch",
     "build": "nest build",
     "start:prod": "node dist/main",
     "dev": "nest start --watch",

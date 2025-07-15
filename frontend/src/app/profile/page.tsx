@@ -122,9 +122,10 @@ export default function ProfilePage() {
       setProfilePicFile(null);
       const fileInput = document.getElementById('profilePic') as HTMLInputElement;
       if (fileInput) fileInput.value = '';
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(error);
-      setMessage(error.message || 'An error occurred while updating.');
+      const message = error instanceof Error ? error.message : 'An error occurred while updating.';
+      setMessage(message);
     }
   };
 

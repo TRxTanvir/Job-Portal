@@ -63,9 +63,10 @@ export default function UploadCvPage() {
         router.push('/profile');
       }, 2000);
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       setIsError(true);
-      setMessage(error.message || 'An error occurred. Please try again.');
+      const message = error instanceof Error ? error.message : 'An error occurred. Please try again.';
+      setMessage(message);
     } finally {
       setIsSubmitting(false);
     }

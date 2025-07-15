@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import ApplyModal from '../../../components/ApplyModal';
 import { useAuth } from '../../../context/AuthContext';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { BsCurrencyDollar, BsCalendarCheck, BsCalendarX, BsBarChart, BsBriefcase } from 'react-icons/bs';
 
 // Define the shape of the Job object
@@ -15,21 +15,15 @@ type Job = {
   location?: string;
 };
 
-// Define the type for the page's props, fixing the 'implicit any' error
-interface JobDetailPageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function JobDetailPage({ params }: JobDetailPageProps) {
+export default function JobDetailPage() {
   // All state and hooks must be at the top level of the component
   const [job, setJob] = useState<Job | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user, isLoading: isAuthLoading } = useAuth();
   const router = useRouter();
-  const { id } = params;
+  const params = useParams();
+  const id = params.id as string;
 
   // Effect to protect the route
   useEffect(() => {
