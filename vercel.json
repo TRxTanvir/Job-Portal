@@ -1,6 +1,11 @@
 {
   "builds": [
     {
+      "src": "frontend/package.json",
+      "use": "@vercel/next",
+      "config": { "outputDirectory": "frontend" }
+    },
+    {
       "src": "backend/src/main.ts",
       "use": "@vercel/node",
       "config": { "includeFiles": ["backend/dist/**"] }
@@ -10,6 +15,10 @@
     {
       "src": "/api/(.*)",
       "dest": "backend/src/main.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
     }
   ]
 }
