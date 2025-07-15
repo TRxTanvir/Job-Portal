@@ -17,6 +17,10 @@
       "dest": "backend/src/main.ts"
     },
     {
+      "src": "/",
+      "dest": "frontend"
+    },
+    {
       "src": "/(.*)",
       "dest": "frontend/$1"
     }
